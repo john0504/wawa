@@ -1,0 +1,61 @@
+<ion-header no-border>
+  <ion-navbar color="white">
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <div class="container">
+    <form #signupForm="ngForm" novalidate (ngSubmit)="onSignup(signupForm)">
+      <div class="header-image">
+        <img [src]="themeService.logoUrl">
+      </div>
+      <div class="header-t">
+        <h1 color="primary">{{ 'SIGNUP.CREATE_MY_ACCOUNT' | translate }}</h1>
+      </div>
+      <ion-list>
+        <div></div>
+        <ion-item>
+          <ion-label floating color="darkGrey">{{ 'SIGNUP.PHONE' | translate }}</ion-label>
+          <ion-input [(ngModel)]="signup.username" name="username" type="number" #username="ngModel" spellcheck="false" autocapitalize="off"
+            maxlength="10" [pattern]="userV" required myTabIndex="1">
+          </ion-input>
+        </ion-item>
+        <button ion-button color="orange" class="full-button" full round [disabled]="!username.valid" (click)="onSendsms()" full>{{ 'SIGNUP.SENDSMS' | translate }}</button>
+        <ion-item>
+          <ion-label floating color="darkGrey">{{ 'SIGNUP.TOKEN' | translate }}</ion-label>
+          <ion-input [(ngModel)]="signup.token" name="token" type="text" #token="ngModel" spellcheck="false" autocapitalize="off"
+            maxlength="8" required myTabIndex="2">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating color="darkGrey">{{ 'SIGNUP.PASSWORD' | translate }}</ion-label>
+          <ion-input [(ngModel)]="signup.password" name="password" [type]="inputType" #password="ngModel" required myTabIndex="3" clearOnEdit="false">
+          </ion-input>
+          <button (click)="onShowHidePassword()" ion-button icon-only clear item-right type="button">
+            <ion-icon [name]="iconName" color="dark"></ion-icon>
+          </button>
+        </ion-item>
+        <span>{{ 'SIGNUP.NOT_VALID_MSG' | translate }}</span>
+        <ion-item>
+          <ion-label floating color="darkGrey">{{ 'SIGNUP.PASSWORDCHECK' | translate }}</ion-label>
+          <ion-input [(ngModel)]="signup.passwordcheck" name="passwordcheck" [type]="inputType" #password="ngModel" required myTabIndex="4" clearOnEdit="false">
+          </ion-input>
+          <button (click)="onShowHidePassword()" ion-button icon-only clear item-right type="button">
+            <ion-icon [name]="iconName" color="dark"></ion-icon>
+          </button>
+        </ion-item>
+         <div class="divider"></div>
+        <div class="userConsent">
+          <ion-checkbox color="primary" [(ngModel)]="userConsent" [ngModelOptions]="{standalone: true}"></ion-checkbox>
+          <p class="description">
+            {{ 'SIGNUP.AGREE_MSG' | translate }}
+            <terms-of-service></terms-of-service>
+          </p>
+        </div>
+        <div class="divider"></div>
+        <button ion-button color="primary" class="full-button" [disabled]="!signupForm.valid || !userConsent" type="submit" round full>{{ 'SIGNUP.CREATE_ACCOUNT' | translate }}</button>
+        <div class="divider"></div>
+      </ion-list>
+    </form>
+  </div>
+  <extra-page-space></extra-page-space>
+</ion-content>

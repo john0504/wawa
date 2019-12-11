@@ -1,0 +1,69 @@
+page-pre-device-create {
+  ion-title {
+    text-align: center;
+  }
+  .scroll-content {
+    padding: 0px 8px 8px 8px;
+  }
+  .container {
+    border-radius: 5px;
+    min-height: 100%;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    align-content: stretch;
+    background: map-get($colors, lightGrey);
+    .main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-content: stretch;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 12px;
+      .wifi-pic {
+        width: 200px;
+      }
+    }
+    .bottom-button {
+      margin: 0;
+      border-radius: 0 0 5px 5px;
+      font-weight: 700;
+      ion-spinner {
+        width: 5rem;
+        * {
+          stroke: color($colors, white) !important;
+        }
+      }
+    }
+    .describe-text {
+      font-size: 1.4rem;
+      text-align: center;
+      display: block;
+    }
+    .control-item-text {
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+    .step {
+      h2,
+      h3,
+      h4 {
+        margin: 0;
+        font-weight: 600;
+      }
+    }
+    .kanban-side {
+      text-align: center;
+      border-radius: 5px;
+      background: map-get($colors, lightGrey);
+      img {
+        max-height: 250px;
+        margin: 8px 0;
+      }
+      .describe-text {
+        font-weight: bold;
+      }
+    }
+  }
+}

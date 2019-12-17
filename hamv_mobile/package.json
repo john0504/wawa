@@ -46,6 +46,7 @@
     "@ionic-native/in-app-browser": "4.12.0",
     "@ionic-native/insomnia": "4.12.0",
     "@ionic-native/market": "4.12.0",
+    "@ionic-native/native-audio": "^4.20.0",
     "@ionic-native/network": "4.12.0",
     "@ionic-native/open-native-settings": "4.12.0",
     "@ionic-native/qr-scanner": "^4.20.0",

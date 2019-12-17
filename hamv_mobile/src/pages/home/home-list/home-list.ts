@@ -18,6 +18,9 @@ import { HomePageBase } from '../home-page-base';
 import { ListGroupItemComponent } from "../../../components/list-group-item/list-group-item";
 import { LargeListItemComponent } from '../../../components/large-list-item/large-list-item';
 import { MqttService } from '../../../providers/mqtt-service';
+import { PopupService } from '../../../providers/popup-service';
+import { NativeAudio } from '@ionic-native/native-audio';
+import { Vibration } from '@ionic-native/vibration';
 
 @IonicPage()
 @Component({
@@ -39,8 +42,24 @@ export class HomeListPage extends HomePageBase {
     public alertCtrl: AlertController,
     public stateStore2: StateStore,
     public mqttService: MqttService,
+    public nativeAudio: NativeAudio,
+    public popupService: PopupService,    
+    public vibration: Vibration
   ) {
-    super(navCtrl, platform, stateStore, translate, storage, themeService, appTasks, alertCtrl, mqttService);
+    super(
+      navCtrl,
+      platform,
+      stateStore,
+      translate,
+      storage,
+      themeService,
+      appTasks,
+      alertCtrl,
+      mqttService,
+      nativeAudio,
+      popupService,
+      vibration
+    );
 
     this.deviceComponent = LargeListItemComponent;
     this.groupComponent = ListGroupItemComponent;

@@ -27,8 +27,12 @@ import { ThemeService } from '../../providers/theme-service';
 
 import { ScrollableTabsOptions } from '../../components/scrollable-tabs/scrollable-tabs-options';
 import { MqttService } from '../../providers/mqtt-service';
+import { NativeAudio } from '@ionic-native/native-audio';
+import { PopupService } from '../../providers/popup-service';
+import { Vibration } from '@ionic-native/vibration';
 
 const TAB_CONFIG = 'tabConfig';
+const USER_SETTING = 'userSetting';
 
 export abstract class HomePageBase {
 
@@ -51,6 +55,7 @@ export abstract class HomePageBase {
   myDevicesGroup: Group;
   public _deviceList = [];
   updateOnline;
+  userSetting = { isGiftSound: true, isGiftVibration: true };
 
   constructor(
     private navCtrl: NavController,
@@ -62,6 +67,9 @@ export abstract class HomePageBase {
     public appTasks: AppTasks,
     public alertCtrl: AlertController,
     public mqttService: MqttService,
+    public nativeAudio: NativeAudio,
+    public popupService: PopupService,
+    public vibration: Vibration
   ) {
     this.subs = [];
     this.account$ = this.stateStore.account$;
@@ -78,6 +86,7 @@ export abstract class HomePageBase {
   }
 
   ionViewDidEnter() {
+    this.nativeAudio.preloadSimple('gift', 'assets/audio/gift.mp3');
     this.subs.push(
       this.account$
         .pipe(
@@ -134,6 +143,8 @@ export abstract class HomePageBase {
     newlist.forEach(device => {
       var online = device.UpdateDate > offlineTime;
       var update = device.UpdateTimestamp > updateTime;
+      var updateMoney = device.UpdateMoneyTime > updateTime;
+      var updateGift = device.UpdateGiftTime > updateTime;
       if (device.Online != online) {
         device.Online = online;
         isChange = true;
@@ -146,6 +157,14 @@ export abstract class HomePageBase {
         }
       } else if (!update) {
         device.updateMoney = false;
+        device.isMoneyChange = false;
+      }
+
+      if (update && device.money != (device.H68 << 16) + device.H69) {
+        device.UpdateMoneyTime = Date.now() / 1000;
+        device.isMoneyChange = true;
+      } else if (!updateMoney) {
+        device.isMoneyChange = false;
       }
 
       if (update && !device.updateGift) {
@@ -156,7 +175,18 @@ export abstract class HomePageBase {
         }
       } else if (!update) {
         device.updateGift = false;
+        device.isGiftChange = false;
       }
+
+      if (update && device.gift != (device.H6A << 16) + device.H6B) {
+        device.UpdateGiftTime = Date.now() / 1000;
+        this.giftAlert(device);
+        device.isMoneyChange = false;
+        device.isGiftChange = true;
+      } else if (!updateGift) {
+        device.isGiftChange = false;
+      }
+
       if (device.Update != update) {
         isChange = true;
         device.Update = device.updateMoney | device.updateGift;
@@ -177,6 +207,8 @@ export abstract class HomePageBase {
         onlineList.forEach(device => {
           device.updateMoney = false;
           device.updateGift = false;
+          device.isMoneyChange = false;
+          device.isGiftChange = false;
         });
       }
       this._deviceList = onlineList;
@@ -199,6 +231,27 @@ export abstract class HomePageBase {
 
     const alert = this.alertCtrl.create(options);
     alert.present();
+  }
+
+  private giftAlert(device) {
+    this.storage.get(USER_SETTING)
+      .then(userSetting => {
+        this.userSetting = userSetting ? userSetting : { isGiftSound: true, isGiftVibration: true };
+        if (this.userSetting.isGiftSound) {
+          this.nativeAudio.play('gift');
+        }
+        if (this.userSetting.isGiftVibration) {
+          this.vibration.vibrate(1000);
+        }
+        const giftToastMsg = `出貨通知:${device.DevName}`;
+        this.popupService.makeToast({
+          message: giftToastMsg,
+          duration: 10000,
+          position: 'top',
+          showCloseButton: true,
+          closeButtonText: 'X',
+        });
+      });
   }
 
   private createTabsFromGroups(groups) {

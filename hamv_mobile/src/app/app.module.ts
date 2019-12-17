@@ -47,6 +47,8 @@ import { AppEngineModule, ReduxModule } from 'app-engine';
 import { Geolocation } from '@ionic-native/geolocation';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { QRScanner } from '@ionic-native/qr-scanner';
+import { NativeAudio } from '@ionic-native/native-audio';
+import { Vibration } from '@ionic-native/vibration';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -111,7 +113,9 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarService,
     Geolocation,
     FileTransfer,
-    QRScanner
+    QRScanner,
+    NativeAudio,
+    Vibration
   ]
 })
 export class AppModule { }

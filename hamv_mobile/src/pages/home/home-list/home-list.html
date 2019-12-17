@@ -20,7 +20,7 @@
       <div class="popit-title" margin-bottom>
         <ion-grid class="toggle-grid">
           <ion-row class="none-padding">
-            <ion-card-title [ngClass]="{'update-money': deviceItem?.updateMoney,'update-gift': deviceItem?.updateGift }"
+            <ion-card-title [ngClass]="{'update-money': deviceItem?.isMoneyChange,'update-gift': !deviceItem?.isMoneyChange && deviceItem?.isGiftChange }"
               (click)="toggleDetails(deviceItem)">
               {{ deviceItem?.DevName }}
               <font class="popit-sub-title" *ngIf="!deviceItem.showDetails">▼</font>
@@ -46,10 +46,10 @@
               <h2>累保: {{ deviceItem?.H61 }}</h2>
             </ion-col>
             <ion-col col-5 class="none-padding">
-              <h2 [ngClass]="{'update-money': deviceItem?.updateMoney && !deviceItem?.updateGift, 'update-gift': deviceItem?.updateMoney && deviceItem?.updateGift}">投幣: {{ deviceItem?.H60 }}</h2>
+              <h2 [ngClass]="{'update-money': deviceItem?.isMoneyChange}">投幣: {{ deviceItem?.H60 }}</h2>
             </ion-col>
             <ion-col col-4 class="none-padding">
-              <h2 [ngClass]="{'update-gift': deviceItem?.updateGift}">出貨: {{ deviceItem?.H62 }}</h2>
+              <h2 [ngClass]="{'update-gift': deviceItem?.isGiftChange}">出貨: {{ deviceItem?.H62 }}</h2>
             </ion-col>
           </ion-row>
         </ion-grid>

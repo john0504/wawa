@@ -29,7 +29,7 @@ export class SettingsPage {
     this.appConfig = appConfig;
     this.storage.get(USER_SETTING)
       .then(userSetting => {
-        this.userSetting = userSetting ? userSetting : { isGiftSound: true };
+        this.userSetting = userSetting ? userSetting : { isGiftSound: true, isGiftVibration: true };
       });
   }
 

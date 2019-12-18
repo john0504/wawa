@@ -31,7 +31,7 @@
       </p>
     </div>
     <div>
-      <button ion-button color="primary" class="bottom-button full-button" [disabled]="!canContinue" (click)="onNext()"
+      <button ion-button color="primary" class="bottom-button full-button" [disabled]="!canContinue" (click)="onCapsuleMode()"
         full>
         <ion-spinner *ngIf="!canContinue"></ion-spinner>
         {{ 'DEVICE_CREATE.CONTINUE' | translate }}

@@ -29,13 +29,13 @@
             <ion-icon class="popit-fab" color="secondary" name="ios-link" *ngIf="deviceItem.Online"></ion-icon>
             <ion-icon class="popit-fab" color="grey" name="ios-link" *ngIf="!deviceItem.Online"></ion-icon>
           </ion-row>
-          <ion-row class="none-padding" *ngIf="getExpire(deviceItem.ExpireDate) < 14*60*60*24 || deviceItem?.H63 != 0">
+          <ion-row class="none-padding" *ngIf="getExpire(deviceItem.ExpireDate) < 14*60*60*24 || (deviceItem?.H63 && deviceItem?.H63 != 0)">
             <ion-card-title> </ion-card-title>
             <ion-icon class="popit-fab" color="orange" name="ios-alarm"
               *ngIf="getExpire(deviceItem.ExpireDate) < 14*60*60*24" (click)="goPayment(deviceItem)"> </ion-icon>
-            <ion-icon class="popit-fab" color="danger" name="logo-usd" *ngIf="deviceItem.isExpire"
+            <ion-icon class="popit-fab" color="danger" name="logo-usd" *ngIf="getExpire(deviceItem.ExpireDate) < 0"
               (click)="goPayment(deviceItem)"></ion-icon>
-            <ion-icon class="popit-fab" color="danger" name="build" *ngIf="deviceItem?.H63 != 0"></ion-icon>
+            <ion-icon class="popit-fab" color="danger" name="build" *ngIf="deviceItem?.H63 && deviceItem?.H63 != 0"></ion-icon>
           </ion-row>
         </ion-grid>
       </div>

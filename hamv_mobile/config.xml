@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="2" id="com.cect.wawa2" version="2.4.20191216" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="5" id="com.cect.wawa2" version="2.4.20191224" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>雲師父</name>
     <description>ExoHome App developed by Exosite.</description>
     <author email="support@exosite.com">Exosite</author>
@@ -33,8 +33,8 @@
         <splash density="port-xxhdpi" src="resources/android/splash/drawable-port-xxhdpi-screen.png" />
         <splash density="port-xxxhdpi" src="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
         <config-file parent="/resources" target="./res/values/strings.xml">
-            <string name="fb_app_id">194158767928038</string>
-            <string name="fb_app_name">HAMV-CECT</string>
+            <string name="APP_ID">194158767928038</string>
+            <string name="APP_NAME">HAMV-CECT</string>
         </config-file>
     </platform>
     <platform name="ios">

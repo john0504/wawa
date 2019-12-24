@@ -208,8 +208,6 @@ export class MqttService {
           data.ExpireDate = data.E;
           data.UpdateDate = data.U;
           data.ExpireTime = this.getDate(data.E);
-          var timestamp = Date.now() / 1000;
-          data.isExpire = (data.ExpireDate - timestamp < 60 * 60 * 24 * 14);
           if (Date.now() / 1000 <= data.E) {
             this.client.subscribe(data.topicU, { qos: 1 });
           }
@@ -228,14 +226,18 @@ export class MqttService {
     } else if (topic == this.topicG) {
       obj = JSON.parse(message.toString());
       var timeList = obj.T;
+      var moneyList = obj.M;
+      console.log("=====" + JSON.stringify(moneyList));
       var alertMessage = "查無紀錄";
       var count = 0;
       timeList.forEach(time => {
         count++;
         if (count == 1) {
-          alertMessage = `(${count}):${this.getTime(time)}<br/>`;
+          alertMessage = `(0${count}): ${this.getShortTime(time)} ${this.getMoneyString(moneyList[count - 1])}<br/>`;
+        } else if (count >= 10) {
+          alertMessage += `(${count}): ${this.getShortTime(time)} ${this.getMoneyString(moneyList[count - 1])}<br/>`;
         } else {
-          alertMessage += `(${count}):${this.getTime(time)}<br/>`;
+          alertMessage += `(0${count}): ${this.getShortTime(time)} ${this.getMoneyString(moneyList[count - 1])}<br/>`;
         }
       });
       let options: AlertOptions = {
@@ -363,6 +365,27 @@ export class MqttService {
     const second = date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`;
 
     return `${date.getFullYear()}-${month}-${day} ${hour}:${minute}:${second}`;
+  }
+
+  public getShortTime(timestamp) {
+    var date = new Date(timestamp * 1000);
+    const month = date.getMonth() + 1 < 10 ? `0${date.getMonth() + 1}` : `${date.getMonth() + 1}`;
+    const day = date.getDate() < 10 ? `0${date.getDate()}` : `${date.getDate()}`;
+    const hour = date.getHours() < 10 ? `0${date.getHours()}` : `${date.getHours()}`;
+    const minute = date.getMinutes() < 10 ? `0${date.getMinutes()}` : `${date.getMinutes()}`;
+    const second = date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`;
+
+    return `${month}/${day} ${hour}:${minute}:${second}`;
+  }
+
+  private getMoneyString(money) {
+    if (money >= 100) {
+      return `=>$:${money}0`;
+    } else if (money >= 10) {
+      return `==>$:${money}0`;
+    } else{
+      return `===>$:${money}0`;
+    }
   }
 
   private unsubscribeAllService() {

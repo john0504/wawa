@@ -233,13 +233,15 @@ export class MqttService {
       timeList.forEach(time => {
         count++;
         if (count == 1) {
-          alertMessage = `(0${count}): ${this.getShortTime(time)} ${this.getMoneyString(moneyList[count - 1])}<br/>`;
-        } else if (count >= 10) {
-          alertMessage += `(${count}): ${this.getShortTime(time)} ${this.getMoneyString(moneyList[count - 1])}<br/>`;
+          alertMessage = `<table border="1"><tr><td align="center"></td><td align="center">出貨時間</td><td align="center">累保金額</td></tr>`;
+          alertMessage += `<tr><td align="center">${count}</td><td>${this.getShortTime(time)}</td><td align="right">${moneyList[count - 1] * 10}</td></tr>`;
         } else {
-          alertMessage += `(0${count}): ${this.getShortTime(time)} ${this.getMoneyString(moneyList[count - 1])}<br/>`;
+          alertMessage += `<tr><td align="center">${count}</td><td>${this.getShortTime(time)}</td><td align="right">${moneyList[count - 1] * 10}</td></tr>`;
         }
       });
+      if (timeList.length != 0) {
+        alertMessage += `</table>`;
+      }
       let options: AlertOptions = {
         title: "禮品近期出獎記錄查詢",
         message: alertMessage,
@@ -376,16 +378,6 @@ export class MqttService {
     const second = date.getSeconds() < 10 ? `0${date.getSeconds()}` : `${date.getSeconds()}`;
 
     return `${month}/${day} ${hour}:${minute}:${second}`;
-  }
-
-  private getMoneyString(money) {
-    if (money >= 100) {
-      return `=>$:${money}0`;
-    } else if (money >= 10) {
-      return `==>$:${money}0`;
-    } else{
-      return `===>$:${money}0`;
-    }
   }
 
   private unsubscribeAllService() {

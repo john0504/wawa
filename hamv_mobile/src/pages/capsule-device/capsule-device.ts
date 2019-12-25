@@ -25,6 +25,9 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { PopupService } from '../../providers/popup-service';
 import { TranslateService } from '@ngx-translate/core';
 import { MqttService } from '../../providers/mqtt-service';
+import { Storage } from '@ionic/storage';
+
+const SSID_LIST = '_ssid_list';
 
 @IonicPage()
 @Component({
@@ -37,10 +40,13 @@ export class CapsuleDevicePage {
   private deviceInfo$: Observable<any>;
   selectAp;
   wifiAps;
-  wifiAp: { ssid?: string, password?: string, sec?: string } = {};
+  wifiAp: { ssid: string, password?: string, sec?: string };
   sec;
+  isInit: boolean = false;
+  saveSsid: boolean = false;
   useText: boolean = false;
   isSelectFocus: boolean = false;
+  ssidList: Array<{ ssid: string, password?: string, sec?: string }>;
 
   iconName: string = "eye";
   inputType: string = "password";
@@ -76,10 +82,12 @@ export class CapsuleDevicePage {
     private stateStore: StateStore,
     private appEngine: AppEngine,
     public mqttService: MqttService,
+    private storage: Storage,
   ) {
     this.subs = [];
     this.deviceInfo$ = this.ngRedux.select(['ssidConfirm', 'deviceInfo']);
     this.wifiAp = { ssid: '', password: '', sec: WifiSecurityType.WPA2 };
+    this.storage.get(SSID_LIST).then(list => this.ssidList = list || []);
 
     const account$ = this.stateStore.account$;
     this.subs.push(
@@ -100,6 +108,17 @@ export class CapsuleDevicePage {
     return this.wifiAp && this.wifiAp.sec !== WifiSecurityType.OPEN;
   }
 
+  fulfillPassword() {
+    const wifiSetting = this.ssidList.find(wifiSetting => this.wifiAp.ssid === wifiSetting.ssid);
+    if (wifiSetting) {
+      this.wifiAp.password = wifiSetting.password;
+      this.wifiAp.sec = wifiSetting.sec;
+    } else {
+      this.wifiAp.password = '';
+    }
+    this.saveSsid = !!wifiSetting;
+  }
+
   clearPassword() {
     if (this.wifiAp && this.wifiAp.sec === WifiSecurityType.OPEN) {
       this.wifiAp.password = '';
@@ -110,6 +129,7 @@ export class CapsuleDevicePage {
     if (this.selectAp) {
       this.wifiAp.ssid = this.selectAp.ssid;
       this.wifiAp.sec = this.selectAp.sec;
+      this.fulfillPassword();
       this.clearPassword();
     }
   }
@@ -195,6 +215,17 @@ export class CapsuleDevicePage {
   }
 
   onNext() {
+    const index = this.ssidList.findIndex(wifiSetting => this.wifiAp.ssid === wifiSetting.ssid);
+    if (index === -1) {
+      if (this.saveSsid) this.ssidList.push(this.wifiAp);
+    } else {
+      if (this.saveSsid) {
+        this.ssidList[index] = this.wifiAp;
+      } else {
+        this.ssidList.splice(index, 1);
+      }
+    }
+    this.storage.set(SSID_LIST, this.ssidList);
     this.localMode()
       .pipe(delay(10000))
       .subscribe(() => {
@@ -263,6 +294,17 @@ export class CapsuleDevicePage {
     }
   }
 
+  private autoSelection(wifiAps: Array<any>) {
+    const result = wifiAps.find(wifiAp => {
+      const index = this.ssidList.findIndex(wifiSetting => wifiSetting.ssid === wifiAp.ssid);
+      return index !== -1;
+    });
+    if (result) {
+      this.selectAp = result;
+      this.wifiApSelected();
+    }
+  }
+
   ionViewDidLoad() {
     this.checkNetworkService.pause();
     this.mqttService.pause();
@@ -296,13 +338,17 @@ export class CapsuleDevicePage {
             let _wifiAps = deviceInfo && deviceInfo.wifi ? deviceInfo.wifi : [];
             _wifiAps = _wifiAps.sort((a, b) => AppUtils.compareWifiSignalStrength(a, b));
             _wifiAps = JSON.parse(JSON.stringify(_wifiAps));
-            this.wifiAps = _wifiAps;
+            if (!this.isInit) {
+              this.isInit = true;
+              this.autoSelection(_wifiAps);
+            }
             const _selectAp = _wifiAps.find(wifiAp => wifiAp.ssid === this.wifiAp.ssid);
             if (_selectAp) {
               this.selectAp = _selectAp;
             } else if (this.selectAp) {
               _wifiAps.push(this.selectAp);
             }
+            this.wifiAps = _wifiAps;
           }
         })
     );

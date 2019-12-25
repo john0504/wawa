@@ -46,7 +46,7 @@ import { AppEngineModule, ReduxModule } from 'app-engine';
 
 import { Geolocation } from '@ionic-native/geolocation';
 import { FileTransfer } from '@ionic-native/file-transfer';
-import { ZBar } from '@ionic-native/zbar';
+import { QRScanner } from '@ionic-native/qr-scanner';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { Vibration } from '@ionic-native/vibration';
 
@@ -113,7 +113,7 @@ export function createTranslateLoader(http: HttpClient) {
     CalendarService,
     Geolocation,
     FileTransfer,
-    ZBar,
+    QRScanner,
     NativeAudio,
     Vibration
   ]

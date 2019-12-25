@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="5" id="com.cect.wawa2" version="2.4.20191224" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget android-versionCode="6" id="com.cect.wawa2" version="2.4.20191225" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>雲師父</name>
     <description>ExoHome App developed by Exosite.</description>
     <author email="support@exosite.com">Exosite</author>
@@ -117,7 +117,6 @@
     <plugin name="cordova-plugin-x-socialsharing" spec="^5.4.4">
         <variable name="ANDROID_SUPPORT_V4_VERSION" value="24.1.1+" />
     </plugin>
-    <plugin name="cordova-sqlite-storage" spec="^2.6.0" />
     <plugin name="ionic-plugin-deeplinks" spec="^1.0.17">
         <variable name="URL_SCHEME" value="myproduct" />
         <variable name="DEEPLINK_SCHEME" value="myproduct" />
@@ -136,6 +135,5 @@
         <variable name="DEEPLINK_5_SCHEME" value=" " />
         <variable name="DEEPLINK_5_HOST" value=" " />
     </plugin>
-    <engine name="android" spec="7.1.1" />
     <engine name="ios" spec="4.5.5" />
 </widget>

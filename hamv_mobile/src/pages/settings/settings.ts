@@ -7,6 +7,7 @@ import {
 
 import { appConfig } from '../../app/app.config';
 import { ViewStateService } from '../../providers/view-state-service';
+import { MqttService } from '../../providers/mqtt-service';
 import { Storage } from '@ionic/storage';
 
 const USER_SETTING = 'userSetting';
@@ -25,6 +26,7 @@ export class SettingsPage {
     public navCtrl: NavController,
     public viewStateService: ViewStateService,
     private storage: Storage,
+    public mqttService: MqttService,
   ) {
     this.appConfig = appConfig;
     this.storage.get(USER_SETTING)
@@ -61,6 +63,7 @@ export class SettingsPage {
     this.appTasks.logoutTask()
       .then(() => {
         this.viewStateService.clearAll();
+        this.mqttService.logoutService();
         this.goHomePage();
       });
   }

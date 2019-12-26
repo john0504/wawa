@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "447604085175",
+    "firebase_url": "https://wawa-63463.firebaseio.com",
+    "project_id": "wawa-63463",
+    "storage_bucket": "wawa-63463.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:447604085175:android:6240915d65d3b6dc565832",
+        "android_client_info": {
+          "package_name": "com.cect.wawa2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "447604085175-9g8ucf615m7jsnmhcfblctc8obkn5lfa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLlryGqgbeC9lzZFD_B0-ck9a1S8P_9jQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "447604085175-9g8ucf615m7jsnmhcfblctc8obkn5lfa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

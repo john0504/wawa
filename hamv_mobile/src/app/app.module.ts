@@ -49,6 +49,7 @@ import { FileTransfer } from '@ionic-native/file-transfer';
 import { QRScanner } from '@ionic-native/qr-scanner';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { Vibration } from '@ionic-native/vibration';
+import { FCM } from '@ionic-native/fcm';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -115,7 +116,8 @@ export function createTranslateLoader(http: HttpClient) {
     FileTransfer,
     QRScanner,
     NativeAudio,
-    Vibration
+    Vibration,
+    FCM
   ]
 })
 export class AppModule { }

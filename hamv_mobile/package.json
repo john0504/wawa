@@ -39,6 +39,7 @@
     "@ionic-native/device": "4.12.0",
     "@ionic-native/email-composer": "4.12.0",
     "@ionic-native/facebook": "4.12.0",
+    "@ionic-native/fcm": "^4.20.0",
     "@ionic-native/file": "4.12.0",
     "@ionic-native/file-transfer": "^4.18.0",
     "@ionic-native/geolocation": "^4.15.0",
@@ -212,7 +213,13 @@
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-nativeaudio": {},
       "cordova-plugin-vibration": {},
-      "cordova-plugin-qrscanner": {}
+      "cordova-plugin-qrscanner": {},
+      "cordova-plugin-fcm-with-dependecy-updated": {
+        "FCM_CORE_VERSION": "16.0.9",
+        "FCM_VERSION": "18.0.0",
+        "GRADLE_TOOLS_VERSION": "3.5.0",
+        "GOOGLE_SERVICES_VERSION": "4.2.0"
+      }
     },
     "platforms": [
       "android",

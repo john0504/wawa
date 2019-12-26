@@ -14,6 +14,7 @@ import { Storage } from '@ionic/storage';
 import { HttpClient } from '@angular/common/http';
 import { PopupService } from '../providers/popup-service';
 import { TranslateService } from '@ngx-translate/core';
+import { FCM } from '@ionic-native/fcm';
 
 const USER_LIST = 'userList';
 const CLIENT_ID = 'clientId';
@@ -57,7 +58,9 @@ export class MqttService {
     private alertCtrl: AlertController,
     private storage: Storage,
     private translate: TranslateService,
+    private fcm: FCM
   ) {
+    this.fcm.subscribeToTopic('marketing');
     this.http.get('./assets/ca/ca_bundle.crt', { responseType: "text" })
       .subscribe(cafile => this.opts.ca = cafile);
     // this.http.get('./assets/ca/ca.crt', { responseType: "text" })
@@ -70,6 +73,9 @@ export class MqttService {
 
   public setUserToken(token) {
     this.accountToken = token;
+    if (this.accountToken.length != 0) {
+      this.fcm.subscribeToTopic(this.accountToken);
+    }
   }
 
   public create() {
@@ -319,9 +325,14 @@ export class MqttService {
   public canLogout() {
     if (this.needLogout) {
       this.needLogout = false;
+      this.logoutService();
       return true;
     }
     return false;
+  }
+
+  public logoutService() {
+    this.fcm.unsubscribeFromTopic(this.accountToken);
   }
 
   public saveUserList() {

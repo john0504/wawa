@@ -293,7 +293,6 @@ export class MqttService {
           if (this._deviceList[i].UpdateDate < timestamp) {
             this._deviceList[i].UpdateDate = timestamp;
           }
-          // this._deviceList[i].UpdateTime = this.getTime(timestamp);
           this._deviceList[i].UpdateTimestamp = timestamp;
           console.log("topic: " + topic + " & timestamp:" + timestamp);
           this.saveUserList();

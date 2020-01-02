@@ -145,6 +145,7 @@ export abstract class HomePageBase {
       var update = device.UpdateTimestamp > updateTime;
       var updateMoney = device.UpdateMoneyTime > updateTime;
       var updateGift = device.UpdateGiftTime > updateTime;
+      device.UpdateTime = this.mqttService.getTime(device.UpdateTimestamp);
       if (device.Online != online) {
         device.Online = online;
         isChange = true;
@@ -153,7 +154,7 @@ export abstract class HomePageBase {
         device.updateMoney = device.money != (device.H68 << 16) + device.H69;
         if (device.updateMoney) {
           isChange = true;
-          device.UpdateTime = this.mqttService.getTime(Date.now() / 1000);
+          // device.UpdateTime = this.mqttService.getTime(Date.now() / 1000);
         }
       } else if (!update) {
         device.updateMoney = false;
@@ -171,7 +172,7 @@ export abstract class HomePageBase {
         device.updateGift = device.gift != (device.H6A << 16) + device.H6B;
         if (device.updateGift) {
           isChange = true;
-          device.UpdateTime = this.mqttService.getTime(Date.now() / 1000);
+          // device.UpdateTime = this.mqttService.getTime(Date.now() / 1000);
         }
       } else if (!update) {
         device.updateGift = false;

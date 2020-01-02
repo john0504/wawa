@@ -1,20 +1,37 @@
-¥ý§R°£platform&plugins
+ï¿½ï¿½ï¿½Rï¿½ï¿½platform&plugins
 rd /q /s platforms,plugins
 
-¥[¤Jplatform
+ï¿½[ï¿½Jplatform
 ionic cordova platform add android
 
 cordova build --release android
 
-­Ybuild¥¢±Ñ ¸ÕµÛ§R°£platform­«·s¥[¤Jandroid
+ï¿½Ybuildï¿½ï¿½ï¿½ï¿½ ï¿½ÕµÛ§Rï¿½ï¿½platformï¿½ï¿½ï¿½sï¿½[ï¿½Jandroid
 
 keytool -genkey -v -keystore my-release-key.keystore -alias wawa -keyalg RSA -keysize 2048 -validity 10000 
-­Y¤w¦³keystore«h¸õ¹L
+ï¿½Yï¿½wï¿½ï¿½keystoreï¿½hï¿½ï¿½ï¿½L
 
-½Æ»sapk¦Ü»Pkey¬Û¦P¥Ø¿ý¤U
+ï¿½Æ»sapkï¿½Ü»Pkeyï¿½Û¦Pï¿½Ø¿ï¿½ï¿½U
 
 jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore app-release-unsigned.apk wawa
 
 cectco
 
 zipalign -v 4 app-release-unsigned.apk wawa.apk
+
+
+iOS:
+
+npm i
+ionic cordova platform add ios@latest
+cd platform/ios 
+edit Podfile:
+    pod 'Firebase/Core'
+	pod 'Firebase/Messaging'
+pod install
+in XCode:
+    Project => info tab
+    Configurations edit debug : none / pod-xxx.debug
+                   edit release : none / pod-xxx.release
+    Target => BuildSettings tab
+    Search Paths edit Header Search Path release add one line : "$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include"

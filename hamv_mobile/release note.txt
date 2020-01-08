@@ -1,23 +1,24 @@
-���R��platform&plugins
-rd /q /s platforms,plugins
+﻿android:
+delete platform & plugins
+	rd /q /s platforms,plugins
 
-�[�Jplatform
-ionic cordova platform add android
+add platform
+	ionic cordova platform add android
 
-cordova build --release android
+build release file
+	cordova build --release android
 
-�Ybuild���� �յۧR��platform���s�[�Jandroid
+ignore this step if you had generated the keystore
+	keytool -genkey -v -keystore my-release-key.keystore -alias wawa -keyalg RSA -keysize 2048 -validity 10000 
 
-keytool -genkey -v -keystore my-release-key.keystore -alias wawa -keyalg RSA -keysize 2048 -validity 10000 
-�Y�w��keystore�h���L
 
-�ƻsapk�ܻPkey�ۦP�ؿ��U
+copy apk file into root folder
 
-jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore app-release-unsigned.apk wawa
+	jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.keystore app-release-unsigned.apk wawa
 
-cectco
+	cectco
 
-zipalign -v 4 app-release-unsigned.apk wawa.apk
+	zipalign -v 4 app-release-unsigned.apk wawa.apk
 
 
 iOS:

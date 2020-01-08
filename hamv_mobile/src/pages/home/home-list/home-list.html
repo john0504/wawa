@@ -114,6 +114,22 @@
           </ion-row>
         </ion-grid>
         <div class="control-item-divider"></div>
+        <ion-item>
+          <ion-label color="primary">
+            <p>
+              <b>投幣推播</b>
+            </p>
+          </ion-label>
+          <ion-toggle color="primary" item-right [disabled]="getExpire(deviceItem.ExpireDate) < 0" [(ngModel)]="deviceItem.isMoneyFcm" name="moneyFcmToggle" (ngModelChange)="setMoneyFcm(deviceItem)"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label color="primary">
+            <p>
+              <b>出獎推播</b>
+            </p>
+          </ion-label>
+          <ion-toggle color="primary" item-right [disabled]="getExpire(deviceItem.ExpireDate) < 0" [(ngModel)]="deviceItem.isGiftFcm" name="giftFcmToggle" (ngModelChange)="setGiftFcm(deviceItem)"></ion-toggle>
+        </ion-item>
         <!-- <h2>裝置序號: {{ deviceItem?.DevNo }}</h2>
         <h2>通訊模組版本: {{ deviceItem?.VerNum }}</h2>
         <h2>控制模組版本: {{ deviceItem?.SaaModel }}</h2>

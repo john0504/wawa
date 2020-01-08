@@ -60,7 +60,7 @@ export class MqttService {
     private translate: TranslateService,
     private fcm: FCM
   ) {
-    this.fcm.subscribeToTopic('marketing');
+    this.FcmService('marketing',true);
     this.http.get('./assets/ca/ca_bundle.crt', { responseType: "text" })
       .subscribe(cafile => this.opts.ca = cafile);
     // this.http.get('./assets/ca/ca.crt', { responseType: "text" })
@@ -73,9 +73,9 @@ export class MqttService {
 
   public setUserToken(token) {
     this.accountToken = token;
-    if (this.accountToken.length != 0) {
-      this.fcm.subscribeToTopic(this.accountToken);
-    }
+    // if (this.accountToken.length != 0) {
+    //   this.fcm.subscribeToTopic(this.accountToken);
+    // }
   }
 
   public create() {
@@ -105,7 +105,7 @@ export class MqttService {
         this._userList.forEach(user => {
           if (user.token == this.accountToken) {
             this._deviceListDate = user.date;
-            // this._deviceList = user.list;
+            this._deviceList = user.list;
             tokenFound = true;
             this.isChange = true;
           }
@@ -222,6 +222,13 @@ export class MqttService {
           newDeviceList.forEach(device => {
             if (device.DevNo == data.D) {
               data = Object.assign(device, data);
+              // FCM subscribe
+              if (device.isMoneyFcm) {
+                this.FcmService(`${device.DevNo}-Money`, true);
+              }
+              if (device.isGiftFcm) {
+                this.FcmService(`${device.DevNo}-Gift`, true);
+              }
             }
           });
           this._deviceList.push(data);
@@ -233,7 +240,6 @@ export class MqttService {
       obj = JSON.parse(message.toString());
       var timeList = obj.T;
       var moneyList = obj.M;
-      console.log("=====" + JSON.stringify(moneyList));
       var alertMessage = "查無紀錄";
       var count = 0;
       timeList.forEach(time => {
@@ -331,7 +337,19 @@ export class MqttService {
   }
 
   public logoutService() {
-    this.fcm.unsubscribeFromTopic(this.accountToken);
+    this._deviceList.forEach(device => {
+      this.FcmService(`${device.DevNo}-Money`, false);
+      this.FcmService(`${device.DevNo}-Gift`, false);
+    });
+    // this.fcm.unsubscribeFromTopic(this.accountToken);
+  }
+
+  public FcmService(topic, isSubscribe) {
+    if (isSubscribe) {
+      this.fcm.subscribeToTopic(`${topic}`);
+    } else {
+      this.fcm.unsubscribeFromTopic(`${topic}`);
+    }
   }
 
   public saveUserList() {
@@ -340,7 +358,7 @@ export class MqttService {
     this._userList.forEach(user => {
       if (user.token == this.accountToken) {
         user.date = this._deviceListDate;
-        // user.list = this._deviceList;
+        user.list = this._deviceList;
       }
     });
     this.storage.set(USER_LIST, this._userList);

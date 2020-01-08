@@ -43,7 +43,7 @@ export class HomeListPage extends HomePageBase {
     public stateStore2: StateStore,
     public mqttService: MqttService,
     public nativeAudio: NativeAudio,
-    public popupService: PopupService,    
+    public popupService: PopupService,
     public vibration: Vibration
   ) {
     super(
@@ -128,6 +128,16 @@ export class HomeListPage extends HomePageBase {
 
     const alert = this.alertCtrl.create(options);
     alert.present();
+  }
+
+  setMoneyFcm(deviceItem) {
+    this.mqttService.FcmService(`${deviceItem.DevNo}-Money`, deviceItem.isMoneyFcm);
+    this.mqttService.saveUserList();
+  }
+
+  setGiftFcm(deviceItem) {
+    this.mqttService.FcmService(`${deviceItem.DevNo}-Gift`, deviceItem.isGiftFcm);
+    this.mqttService.saveUserList();
   }
 
   clearBank(deviceItem) {

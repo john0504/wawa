@@ -231,6 +231,10 @@ export class MqttService {
               }
             }
           });
+          if (data.isGiftFcm == null) {
+            data.isGiftFcm = true;
+            this.FcmService(`${data.DevNo}-Gift`, true);
+          }
           this._deviceList.push(data);
         });
         this.saveUserList();

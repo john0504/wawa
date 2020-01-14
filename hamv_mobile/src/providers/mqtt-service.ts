@@ -15,6 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { PopupService } from '../providers/popup-service';
 import { TranslateService } from '@ngx-translate/core';
 import { FCM } from '@ionic-native/fcm';
+import { AppVersion } from '@ionic-native/app-version';
 
 const USER_LIST = 'userList';
 const CLIENT_ID = 'clientId';
@@ -33,6 +34,7 @@ export class MqttService {
   private topicD = "";
   private topicG = "";
   private topicM = "";
+  private topicVersion = "WAWA2/AppVersion";
   private _timestamp = 0;
   private needLogout = false;
   private isPaused: number = 0;
@@ -58,9 +60,10 @@ export class MqttService {
     private alertCtrl: AlertController,
     private storage: Storage,
     private translate: TranslateService,
-    private fcm: FCM
+    private fcm: FCM,
+    public appVersion: AppVersion,
   ) {
-    this.FcmService('marketing',true);
+    this.fcm.subscribeToTopic('marketing');
     this.http.get('./assets/ca/ca_bundle.crt', { responseType: "text" })
       .subscribe(cafile => this.opts.ca = cafile);
     // this.http.get('./assets/ca/ca.crt', { responseType: "text" })
@@ -168,6 +171,8 @@ export class MqttService {
   }
 
   private subscribeTopic() {
+    // 檢查App版本
+    this.client.subscribe(this.topicVersion, { qos: 1 });
     this.topicD = `WAWA/${this.accountToken}/D`;
     this.client.subscribe(this.topicD, { qos: 1 });
     // 更新裝置列表
@@ -192,7 +197,25 @@ export class MqttService {
   }
 
   private getMessage(topic, message) {
-    if (topic == this.topicC) {
+    if (topic == this.topicVersion) {
+      var versionStr = message.toString();
+      this.appVersion.getVersionNumber()
+        .then(appVer => {
+          if (appVer != versionStr) {
+            let options: AlertOptions = {
+              title: "App版本更新通知",
+              message: "請立即更新App版本",
+              buttons: ["確定"],
+            };
+            const alert = this.alertCtrl.create(options);
+            alert.present();
+          }
+        })
+        .catch(() => {
+          console.log("Get AppVersion error!");
+        });
+
+    } else if (topic == this.topicC) {
       var obj = JSON.parse(message.toString());
       if (obj && obj.time && this.accountToken != "0005") {
         if (obj.time > this._timestamp) {
@@ -205,6 +228,11 @@ export class MqttService {
       console.log("topic: " + topic + " & message: " + message.toString());
       if (obj && obj.data) {
         var newDeviceList = this._deviceList;
+        this._deviceList.forEach(device => {
+          // FCM unsubscribe
+          this.FcmService(`${device.DevNo}-Money`, false);
+          this.FcmService(`${device.DevNo}-Gift`, false);
+        });
         this._deviceList = [];
         obj.data.forEach(data => {
           data.topicC = `WAWA/${data.D}/C`;
@@ -350,9 +378,9 @@ export class MqttService {
 
   public FcmService(topic, isSubscribe) {
     if (isSubscribe) {
-      this.fcm.subscribeToTopic(`${topic}`);
+      this.fcm.subscribeToTopic(`${this.accountToken}-${topic}`);
     } else {
-      this.fcm.unsubscribeFromTopic(`${topic}`);
+      this.fcm.unsubscribeFromTopic(`${this.accountToken}-${topic}`);
     }
   }
 

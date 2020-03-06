@@ -55,7 +55,7 @@ export class SettingsPage {
     this.navCtrl.push('MyAccountPage');
   }
 
-  setGift() {
+  setSetting() {
     this.storage.set(USER_SETTING, this.userSetting);
   }
 

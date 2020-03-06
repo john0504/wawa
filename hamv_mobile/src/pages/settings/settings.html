@@ -26,10 +26,18 @@
     <ion-item>
       <ion-label color="primary">
         <p>
+          <b>投幣提示音</b>
+        </p>
+      </ion-label>
+      <ion-toggle color="primary" item-right [(ngModel)]="userSetting.isCoinSound" name="coinSoundToggle" (ngModelChange)="setSetting()"></ion-toggle>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary">
+        <p>
           <b>出獎提示音</b>
         </p>
       </ion-label>
-      <ion-toggle color="primary" item-right [(ngModel)]="userSetting.isGiftSound" name="giftSoundToggle" (ngModelChange)="setGift()"></ion-toggle>
+      <ion-toggle color="primary" item-right [(ngModel)]="userSetting.isGiftSound" name="giftSoundToggle" (ngModelChange)="setSetting()"></ion-toggle>
     </ion-item>
     <ion-item>
       <ion-label color="primary">
@@ -37,7 +45,7 @@
           <b>出獎震動</b>
         </p>
       </ion-label>
-      <ion-toggle color="primary" item-right [(ngModel)]="userSetting.isGiftVibration" name="giftVibrationToggle" (ngModelChange)="setGift()"></ion-toggle>
+      <ion-toggle color="primary" item-right [(ngModel)]="userSetting.isGiftVibration" name="giftVibrationToggle" (ngModelChange)="setSetting()"></ion-toggle>
     </ion-item>
     <span class="section-text">{{ 'SETTINGS.ACCOUNT' | translate }}</span>
     <!-- <button ion-button color="primary" full round icon-left (click)="goMyAccountPage()" margin-top>

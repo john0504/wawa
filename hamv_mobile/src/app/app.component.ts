@@ -44,6 +44,7 @@ import { debounceImmediate } from '../app/app.extends';
 import { CheckNetworkService } from '../providers/check-network';
 import { GoAddingDeviceService } from '../providers/go-adding-device-service';
 import { OtaUpdateResult } from '../providers/ota-update-result';
+import { UtilsProvider } from '../providers/utils-provider';
 import { ImageCacheService } from '../modules/image-cache';
 import { ThemeService } from '../providers/theme-service';
 import { EchartsService } from '../components/chart-components/echarts-core/echarts-service';
@@ -104,6 +105,7 @@ export class MyApp implements OnInit, OnDestroy {
     public themeService: ThemeService,
     public checkNetworkService: CheckNetworkService,
     public mqttService: MqttService,
+    private utilsProvider: UtilsProvider,
   ) {
     this.subs = [];
     this.esService.init();
@@ -201,6 +203,11 @@ export class MyApp implements OnInit, OnDestroy {
     if (!this.isCurrentPage(p)) {
       this.navCtrl.setRoot(p.component);
     }
+  }
+
+  goQA() {
+    const url = 'http://www.cectco.com/wawa/';
+    this.utilsProvider.openLink(url);
   }
 
   goHomePage() {

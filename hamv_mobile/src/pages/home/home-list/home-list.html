@@ -20,7 +20,8 @@
       <div class="popit-title" margin-bottom>
         <ion-grid class="toggle-grid">
           <ion-row class="none-padding">
-            <ion-card-title [ngClass]="{'update-money': deviceItem?.isMoneyChange,'update-gift': !deviceItem?.isMoneyChange && deviceItem?.isGiftChange }"
+            <ion-card-title
+              [ngClass]="{'update-money': deviceItem?.isMoneyChange,'update-gift': !deviceItem?.isMoneyChange && deviceItem?.isGiftChange }"
               (click)="toggleDetails(deviceItem)">
               {{ deviceItem?.DevName }}
               <font class="popit-sub-title" *ngIf="!deviceItem.showDetails">▼</font>
@@ -29,17 +30,18 @@
             <ion-icon class="popit-fab" color="secondary" name="ios-link" *ngIf="deviceItem.Online"></ion-icon>
             <ion-icon class="popit-fab" color="grey" name="ios-link" *ngIf="!deviceItem.Online"></ion-icon>
           </ion-row>
-          <ion-row class="none-padding" *ngIf="getExpire(deviceItem.ExpireDate) < 14*60*60*24 || (deviceItem?.H63 && deviceItem?.H63 != 0)">
-            <ion-card-title> </ion-card-title>
+          <ion-row class="none-padding"
+            *ngIf="getExpire(deviceItem.ExpireDate) < 14*60*60*24 || (deviceItem?.H63 && deviceItem?.H63 != 0)">
             <ion-icon class="popit-fab" color="orange" name="ios-alarm"
               *ngIf="getExpire(deviceItem.ExpireDate) < 14*60*60*24" (click)="goPayment(deviceItem)"> </ion-icon>
             <ion-icon class="popit-fab" color="danger" name="logo-usd" *ngIf="getExpire(deviceItem.ExpireDate) < 0"
               (click)="goPayment(deviceItem)"></ion-icon>
-            <ion-icon class="popit-fab" color="danger" name="build" *ngIf="deviceItem?.H63 && deviceItem?.H63 != 0"></ion-icon>
+            <ion-icon class="popit-fab" color="danger" name="build" *ngIf="deviceItem?.H63 && deviceItem?.H63 != 0">
+            </ion-icon>
           </ion-row>
         </ion-grid>
       </div>
-      <div class="popit-content" *ngIf="!deviceItem.showDetails">
+      <div class="popit-content" *ngIf="deviceItem.Online && !deviceItem.showDetails">
         <ion-grid class="toggle-grid">
           <ion-row class="none-padding">
             <ion-col col-3 class="none-padding">
@@ -52,13 +54,18 @@
               <h2 [ngClass]="{'update-gift': deviceItem?.isGiftChange}">出貨: {{ deviceItem?.H62 }}</h2>
             </ion-col>
           </ion-row>
+          <ion-row align-items-center>
+            <ion-col class="none-padding" *ngIf="deviceItem?.UpdateTime">
+              <h2>資訊更新時間: {{ deviceItem?.UpdateTime }}</h2>
+            </ion-col>
+          </ion-row>
         </ion-grid>
       </div>
       <div class="popit-content" *ngIf="deviceItem.showDetails">
         <ion-grid class="toggle-grid">
           <ion-row align-items-center>
             <ion-col col-8 class="none-padding">
-              <h2>累積保夾數: {{ deviceItem?.H61 }}</h2>
+              <h2>累積保夾: {{ deviceItem?.H61 }}</h2>
             </ion-col>
             <ion-col col-4 class="toggle-items none-padding">
               <button ion-button class="full-button" round icon-left color="primary" (click)="clearBank(deviceItem)"
@@ -120,7 +127,9 @@
               <b>投幣推播</b>
             </p>
           </ion-label>
-          <ion-toggle color="primary" item-right [disabled]="getExpire(deviceItem.ExpireDate) < 0" [(ngModel)]="deviceItem.isMoneyFcm" name="moneyFcmToggle" (ngModelChange)="setMoneyFcm(deviceItem)"></ion-toggle>
+          <ion-toggle color="primary" item-right [disabled]="getExpire(deviceItem.ExpireDate) < 0"
+            [(ngModel)]="deviceItem.isMoneyFcm" name="moneyFcmToggle" (ngModelChange)="setMoneyFcm(deviceItem)">
+          </ion-toggle>
         </ion-item>
         <ion-item>
           <ion-label color="primary">
@@ -128,12 +137,10 @@
               <b>出獎推播</b>
             </p>
           </ion-label>
-          <ion-toggle color="primary" item-right [disabled]="getExpire(deviceItem.ExpireDate) < 0" [(ngModel)]="deviceItem.isGiftFcm" name="giftFcmToggle" (ngModelChange)="setGiftFcm(deviceItem)"></ion-toggle>
+          <ion-toggle color="primary" item-right [disabled]="getExpire(deviceItem.ExpireDate) < 0"
+            [(ngModel)]="deviceItem.isGiftFcm" name="giftFcmToggle" (ngModelChange)="setGiftFcm(deviceItem)">
+          </ion-toggle>
         </ion-item>
-        <!-- <h2>裝置序號: {{ deviceItem?.DevNo }}</h2>
-        <h2>通訊模組版本: {{ deviceItem?.VerNum }}</h2>
-        <h2>控制模組版本: {{ deviceItem?.SaaModel }}</h2>
-        <h2>有效時間: {{ deviceItem?.ExpireTime }}</h2> -->
         <div class="popit-other-items">
           <button [ngStyle]="{ 'width':'100%' }" ion-button class="other-item" color="warmGrey" round
             (click)="showInfo(deviceItem)">
@@ -148,6 +155,93 @@
             <ion-icon name="close"></ion-icon>
             解除綁定
           </button>
+        </div>
+      </div>
+      <div class="popit-content"
+        *ngIf="(deviceItem.H64 >= 2020 && deviceItem.H64 <= 2030 && !(getExpire(deviceItem.ExpireDate) < 0)) || deviceItem.stopUpdate">
+        <ion-grid class="toggle-grid" *ngIf="deviceItem.showTestDetails">
+          <ion-row align-items-center>
+            <ion-col col-9 class="none-padding">
+              <h2>電眼測試</h2>
+            </ion-col>
+            <ion-col col-3 class="toggle-items none-padding">
+              <button ion-button class="full-button" round icon-left color="primary" (click)="returnTest(deviceItem)"
+                [disabled]="deviceItem.testLock || !deviceItem.Online">
+                啟動
+              </button>
+            </ion-col>
+          </ion-row>
+          <ion-row align-items-center>
+            <ion-col col-3 class="none-padding">
+              <h2>投幣測試</h2>
+            </ion-col>
+            <ion-col col-3 class="toggle-items none-padding">
+              <button ion-button class="full-button" round icon-left color="primary" (click)="addBank(deviceItem,1)"
+                [disabled]="deviceItem.testLock || !deviceItem.Online">
+                1次
+              </button>
+            </ion-col>
+            <ion-col col-3 class="toggle-items none-padding">
+              <button ion-button class="full-button" round icon-left color="primary" (click)="addBank(deviceItem,5)"
+                [disabled]="deviceItem.testLock || !deviceItem.Online">
+                5次
+              </button>
+            </ion-col>
+            <ion-col col-3 class="toggle-items none-padding">
+              <button ion-button class="full-button" round icon-left color="primary" (click)="addBank(deviceItem,10)"
+                [disabled]="deviceItem.testLock || !deviceItem.Online">
+                10次
+              </button>
+            </ion-col>
+          </ion-row>
+          <ion-row align-items-center>
+            <ion-col col-9 class="none-padding">
+              <h2>搖桿測試</h2>
+            </ion-col>
+            <ion-col col-3 class="toggle-items none-padding">
+              <button ion-button class="full-button" round icon-left color="primary" (click)="removeCoin(deviceItem)"
+                [disabled]="deviceItem.testLock || !deviceItem.Online">
+                啟動
+              </button>
+            </ion-col>
+          </ion-row>
+          <ion-row align-items-center>
+            <ion-col col-9 class="none-padding">
+              <h2>重開機測試</h2>
+            </ion-col>
+            <ion-col col-3 class="toggle-items none-padding">
+              <button ion-button class="full-button" round icon-left color="primary" (click)="reboot(deviceItem)"
+                [disabled]="deviceItem.testLock || !deviceItem.Online">
+                啟動
+              </button>
+            </ion-col>
+          </ion-row>
+          <ion-row align-items-center>
+            <ion-col col-9 class="none-padding">
+              <h2>贈局</h2>
+            </ion-col>
+            <ion-col col-3 class="toggle-items none-padding">
+              <button ion-button class="full-button" round icon-left color="primary" (click)="addCoin(deviceItem)"
+                [disabled]="deviceItem.testLock || !deviceItem.Online">
+                啟動
+              </button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div class="popit-title" margin-bottom>
+          <ion-grid class="toggle-grid">
+            <ion-row class="none-padding">
+              <ion-col col-6 class="none-padding">
+              </ion-col>
+              <ion-col col-6 class="toggle-items none-padding">
+                <ion-card-title (click)="toggleTestDetails(deviceItem)">
+                  <font class="popit-sub-title" *ngIf="!deviceItem.showTestDetails">▼</font>
+                  <font class="popit-sub-title" *ngIf="deviceItem.showTestDetails">▲</font>
+                  維修測試
+                </ion-card-title>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </div>
       </div>
     </ion-card-content>

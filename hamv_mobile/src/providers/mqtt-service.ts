@@ -108,7 +108,7 @@ export class MqttService {
         this._userList.forEach(user => {
           if (user.token == this.accountToken) {
             this._deviceListDate = user.date;
-            this._deviceList = user.list;
+            this._deviceList = user.list; 
             tokenFound = true;
             this.isChange = true;
           }
@@ -387,10 +387,15 @@ export class MqttService {
   public saveUserList() {
     var timestamp = Date.now() / 1000;
     this._deviceListDate = parseInt(timestamp.toString(), 10);
+    var saveList = JSON.parse(JSON.stringify(this._deviceList));
+    saveList.forEach(device => {
+      device.testLock = false;
+      device.stopUpdate = false;
+    });
     this._userList.forEach(user => {
       if (user.token == this.accountToken) {
         user.date = this._deviceListDate;
-        user.list = this._deviceList;
+        user.list = saveList;
       }
     });
     this.storage.set(USER_LIST, this._userList);

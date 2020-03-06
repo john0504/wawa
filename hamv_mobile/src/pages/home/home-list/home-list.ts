@@ -99,6 +99,17 @@ export class HomeListPage extends HomePageBase {
       deviceItem.showDetails = false;
     } else {
       deviceItem.showDetails = true;
+      deviceItem.showTestDetails = false;
+    }
+    this.mqttService.saveUserList();
+  }
+
+  toggleTestDetails(deviceItem) {
+    if (deviceItem.showTestDetails) {
+      deviceItem.showTestDetails = false;
+    } else {
+      deviceItem.showTestDetails = true;
+      deviceItem.showDetails = false;
     }
     this.mqttService.saveUserList();
   }
@@ -178,7 +189,8 @@ export class HomeListPage extends HomePageBase {
 
   sendData(deviceItem, message) {
     var topic = `WAWA/${deviceItem.DevNo}/D`;
-    this.mqttService.publish(topic, JSON.stringify(message), { qos: 1, retain: false });
+    message.CmdTimeStamp = Date.now() / 1000;
+    this.mqttService.publish(topic, JSON.stringify(message), { qos: 2, retain: false });
   }
 
   goPayment(deviceItem) {
@@ -190,12 +202,209 @@ export class HomeListPage extends HomePageBase {
   }
 
   showInfo(deviceItem) {
-    const alertSubTitle = `SN: ${deviceItem.DevNo}<br/>Wi-Fi Ver: ${deviceItem.VerNum}<br/>MB Ver: ${deviceItem.SaaModel}<br/>雲端期限: ${deviceItem.ExpireTime}`;
-
+    var alertSubTitle = `SN: ${deviceItem.DevNo}<br/>Wi-Fi Ver: ${deviceItem.VerNum}<br/>MB Ver: ${deviceItem.SaaModel}<br/>雲端期限: ${deviceItem.ExpireTime}`;
+    if (deviceItem.H64 >= 2020 && deviceItem.H64 <= 2030) {
+      var month = (deviceItem.H65 >> 8) < 10 ? `0${deviceItem.H65 >> 8}` : `${deviceItem.H65 >> 8}`;
+      var date = (deviceItem.H65 & 0xFF) < 10 ? `0${deviceItem.H65 & 0xFF}` : `${deviceItem.H65 & 0xFF}`;
+      alertSubTitle = `${alertSubTitle}<br/>Ext-Module: ${deviceItem.H64}${month}${date}`;
+    }
 
     let options: AlertOptions = {
       subTitle: alertSubTitle,
       buttons: ["確定"],
+    };
+
+    const alert = this.alertCtrl.create(options);
+    alert.present();
+  }
+
+  returnTest(deviceItem) {
+    let options: AlertOptions = {
+      title: "提示",
+      subTitle: "電眼測試約耗時30秒,是否確認執行?",
+      buttons: [
+        {
+          text: "取消",
+          role: 'cancel',
+        },
+        {
+          text: "是",
+          handler: () => {
+            var message = {
+              H64: 0x0001
+            };
+            if (deviceItem.stopUpdate) {
+              return;
+            }
+            this.sendData(deviceItem, message);
+            deviceItem.stopUpdate = true;
+            var stopInterval = setInterval(() => {
+              clearInterval(stopInterval);
+              deviceItem.stopUpdate = false;
+            }, 10 * 1000);
+            deviceItem.testLock = true;
+            var lockInterval = setInterval(() => {
+              clearInterval(lockInterval);
+              deviceItem.testLock = false;
+            }, 30 * 1000);
+          },
+        }
+      ],
+    };
+
+    const alert = this.alertCtrl.create(options);
+    alert.present();
+  }
+
+  addBank(deviceItem, times) {
+    let options: AlertOptions = {
+      title: "提示",
+      subTitle: "投幣測試約耗時" + times * 5 + "秒,是否確認執行?",
+      buttons: [
+        {
+          text: "取消",
+          role: 'cancel',
+        },
+        {
+          text: "是",
+          handler: () => {
+            var cmd = 0x0100 * times + 0x0002;
+            var message = {
+              H64: cmd
+            };
+            if (deviceItem.stopUpdate) {
+              return;
+            }
+            this.sendData(deviceItem, message);
+            deviceItem.stopUpdate = true;
+            var stopInterval = setInterval(() => {
+              clearInterval(stopInterval);
+              deviceItem.stopUpdate = false;
+            }, 10 * 1000);
+            deviceItem.testLock = true;
+            var lockInterval = setInterval(() => {
+              clearInterval(lockInterval);
+              deviceItem.testLock = false;
+            }, times * 5 * 1000);
+          },
+        }
+      ],
+    };
+
+    const alert = this.alertCtrl.create(options);
+    alert.present();
+  }
+
+  addCoin(deviceItem) {
+    let options: AlertOptions = {
+      title: "提示",
+      subTitle: "贈局約耗時3秒,是否確認執行?",
+      buttons: [
+        {
+          text: "取消",
+          role: 'cancel',
+        },
+        {
+          text: "是",
+          handler: () => {
+            var cmd = 0x0100 + 0x0004;
+            var message = {
+              H64: cmd
+            };
+            if (deviceItem.stopUpdate) {
+              return;
+            }
+            this.sendData(deviceItem, message);
+            deviceItem.stopUpdate = true;
+            var stopInterval = setInterval(() => {
+              clearInterval(stopInterval);
+              deviceItem.stopUpdate = false;
+            }, 10 * 1000);
+            deviceItem.testLock = true;
+            var lockInterval = setInterval(() => {
+              clearInterval(lockInterval);
+              deviceItem.testLock = false;
+            }, 3 * 1000);
+          },
+        }
+      ],
+    };
+
+    const alert = this.alertCtrl.create(options);
+    alert.present();
+  }
+
+  removeCoin(deviceItem) {
+    let options: AlertOptions = {
+      title: "提示",
+      subTitle: "搖桿測試約耗時5秒,是否確認執行?",
+      buttons: [
+        {
+          text: "取消",
+          role: 'cancel',
+        },
+        {
+          text: "是",
+          handler: () => {
+            var cmd = 0x0100 + 0x0003;
+            var message = {
+              H64: cmd
+            };
+            if (deviceItem.stopUpdate) {
+              return;
+            }
+            this.sendData(deviceItem, message);
+            deviceItem.stopUpdate = true;
+            var stopInterval = setInterval(() => {
+              clearInterval(stopInterval);
+              deviceItem.stopUpdate = false;
+            }, 10 * 1000);
+            deviceItem.testLock = true;
+            var lockInterval = setInterval(() => {
+              clearInterval(lockInterval);
+              deviceItem.testLock = false;
+            }, 5 * 1000);
+          },
+        }
+      ],
+    };
+
+    const alert = this.alertCtrl.create(options);
+    alert.present();
+  }
+
+  reboot(deviceItem) {
+    let options: AlertOptions = {
+      title: "提示",
+      subTitle: "重開機測試約耗時30秒,是否確認執行?",
+      buttons: [
+        {
+          text: "取消",
+          role: 'cancel',
+        },
+        {
+          text: "是",
+          handler: () => {
+            var message = {
+              H65: 0x0001
+            };
+            if (deviceItem.stopUpdate) {
+              return;
+            }
+            this.sendData(deviceItem, message);
+            deviceItem.stopUpdate = true;
+            var stopInterval = setInterval(() => {
+              clearInterval(stopInterval);
+              deviceItem.stopUpdate = false;
+            }, 10 * 1000);
+            deviceItem.testLock = true;
+            var lockInterval = setInterval(() => {
+              clearInterval(lockInterval);
+              deviceItem.testLock = false;
+            }, 30 * 1000);
+          },
+        }
+      ],
     };
 
     const alert = this.alertCtrl.create(options);

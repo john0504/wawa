@@ -55,7 +55,7 @@ export abstract class HomePageBase {
   myDevicesGroup: Group;
   public _deviceList = [];
   updateOnline;
-  userSetting = { isGiftSound: true, isGiftVibration: true };
+  userSetting = { isCoinSound: false, isGiftSound: true, isGiftVibration: true };
 
   constructor(
     private navCtrl: NavController,
@@ -87,6 +87,7 @@ export abstract class HomePageBase {
 
   ionViewDidEnter() {
     this.nativeAudio.preloadSimple('gift', 'assets/audio/gift.mp3');
+    this.nativeAudio.preloadSimple('coin', 'assets/audio/coin.mp3');
     this.subs.push(
       this.account$
         .pipe(
@@ -125,7 +126,6 @@ export abstract class HomePageBase {
     this.subs.length = 0;
     clearInterval(this.updateOnline);
     this.updateOnline = null;
-    this._deviceList = [];
   }
 
   loadDeviceList() {
@@ -163,6 +163,7 @@ export abstract class HomePageBase {
 
       if (update && device.money != (device.H68 << 16) + device.H69) {
         device.UpdateMoneyTime = Date.now() / 1000;
+        this.coinAlert();
         device.isMoneyChange = true;
       } else if (!updateMoney) {
         device.isMoneyChange = false;
@@ -234,10 +235,20 @@ export abstract class HomePageBase {
     alert.present();
   }
 
+  private coinAlert() {
+    this.storage.get(USER_SETTING)
+      .then(userSetting => {
+        this.userSetting = userSetting ? userSetting : { isCoinSound: false, isGiftSound: true, isGiftVibration: true };
+        if (this.userSetting.isCoinSound) {
+          this.nativeAudio.play('coin');
+        }
+      });
+  }
+
   private giftAlert(device) {
     this.storage.get(USER_SETTING)
       .then(userSetting => {
-        this.userSetting = userSetting ? userSetting : { isGiftSound: true, isGiftVibration: true };
+        this.userSetting = userSetting ? userSetting : { isCoinSound: false, isGiftSound: true, isGiftVibration: true };
         if (this.userSetting.isGiftSound) {
           this.nativeAudio.play('gift');
         }

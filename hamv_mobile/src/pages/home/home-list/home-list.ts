@@ -233,7 +233,7 @@ export class HomeListPage extends HomePageBase {
             var message = {
               H64: 0x0001
             };
-            if (deviceItem.stopUpdate) {
+            if (deviceItem.testLock) {
               return;
             }
             this.sendData(deviceItem, message);
@@ -272,7 +272,7 @@ export class HomeListPage extends HomePageBase {
             var message = {
               H64: cmd
             };
-            if (deviceItem.stopUpdate) {
+            if (deviceItem.testLock) {
               return;
             }
             this.sendData(deviceItem, message);
@@ -311,7 +311,7 @@ export class HomeListPage extends HomePageBase {
             var message = {
               H64: cmd
             };
-            if (deviceItem.stopUpdate) {
+            if (deviceItem.testLock) {
               return;
             }
             this.sendData(deviceItem, message);
@@ -350,7 +350,7 @@ export class HomeListPage extends HomePageBase {
             var message = {
               H64: cmd
             };
-            if (deviceItem.stopUpdate) {
+            if (deviceItem.testLock) {
               return;
             }
             this.sendData(deviceItem, message);
@@ -388,7 +388,7 @@ export class HomeListPage extends HomePageBase {
             var message = {
               H65: 0x0001
             };
-            if (deviceItem.stopUpdate) {
+            if (deviceItem.testLock) {
               return;
             }
             this.sendData(deviceItem, message);

@@ -221,7 +221,7 @@ export class HomeListPage extends HomePageBase {
   returnTest(deviceItem) {
     let options: AlertOptions = {
       title: "提示",
-      subTitle: "電眼測試約耗時30秒,是否確認執行?",
+      subTitle: "電眼測試約耗時35秒,是否確認執行?",
       buttons: [
         {
           text: "取消",
@@ -246,7 +246,7 @@ export class HomeListPage extends HomePageBase {
             var lockInterval = setInterval(() => {
               clearInterval(lockInterval);
               deviceItem.testLock = false;
-            }, 30 * 1000);
+            }, 35 * 1000);
           },
         }
       ],
@@ -259,7 +259,7 @@ export class HomeListPage extends HomePageBase {
   addBank(deviceItem, times) {
     let options: AlertOptions = {
       title: "提示",
-      subTitle: "投幣測試約耗時" + times * 5 + "秒,是否確認執行?",
+      subTitle: "投幣測試約耗時" + (times * 5 + 5) + "秒,是否確認執行?",
       buttons: [
         {
           text: "取消",
@@ -285,7 +285,7 @@ export class HomeListPage extends HomePageBase {
             var lockInterval = setInterval(() => {
               clearInterval(lockInterval);
               deviceItem.testLock = false;
-            }, times * 5 * 1000);
+            }, (times * 5 + 5) * 1000);
           },
         }
       ],

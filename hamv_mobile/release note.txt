@@ -35,4 +35,7 @@ in XCode:
     Configurations edit debug : none / pod-xxx.debug
                    edit release : none / pod-xxx.release
     Target => BuildSettings tab
-    Search Paths edit Header Search Path release add one line : "$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/include"
+    Search Paths edit Header Search Path release add two line : 
+	"${PODS_ROOT}/Headers/Public/Firebase"
+	"${PODS_ROOT}/Headers/Public/FirebaseAnalyticsInterop"
+	"$"{PODS_ROOT}/Firebase/CoreOnly/Sources"

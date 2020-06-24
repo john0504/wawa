@@ -62,7 +62,7 @@
     "@ngx-translate/http-loader": "2.0.1",
     "app-engine": "file:app-engine-2.3.0.tgz",
     "base64-js": "^1.2.1",
-    "cordova-android": "^8.1.0",
+    "cordova-android": "8.1.0",
     "cordova-ios": "^5.1.1",
     "cordova-open-native-settings": "^1.5.2",
     "cordova-plugin-add-swift-support": "^1.7.2",
@@ -74,6 +74,7 @@
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-email-composer": "^0.8.15",
     "cordova-plugin-facebook4": "^2.5.0",
+    "cordova-plugin-fcm-with-dependecy-updated": "^7.0.0-beta.4",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-geolocation": "^4.0.2",
@@ -85,6 +86,7 @@
     "cordova-plugin-market": "^1.2.0",
     "cordova-plugin-nativeaudio": "^3.0.9",
     "cordova-plugin-network-information": "^2.0.2",
+    "cordova-plugin-qrscanner": "^3.0.1",
     "cordova-plugin-safariviewcontroller": "^1.6.0",
     "cordova-plugin-splashscreen": "^5.0.3",
     "cordova-plugin-vibration": "^3.1.1",
@@ -125,7 +127,7 @@
     "@ionic-native-mocks/in-app-browser": "^2.0.6",
     "@ionic-native-mocks/network": "^2.0.6",
     "@ionic-native-mocks/safari-view-controller": "^2.0.6",
-    "@ionic/app-scripts": "3.2.0",
+    "@ionic/app-scripts": "^3.2.4",
     "@types/jasmine": "2.8.4",
     "@types/jasminewd2": "~2.0.2",
     "@types/js-yaml": "^3.5.30",
@@ -228,8 +230,8 @@
       "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
